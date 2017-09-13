@@ -1,0 +1,16 @@
+"root_node"
+{
+    "first_sub_node"
+    {
+        "first"     "value1"
+        "second"    "value2"
+    }
+    "second_sub_node"
+    {
+        "third_sub_node"
+        {
+            "fourth"    "value4"
+        }
+        "third"     "value3"
+    }
+}
