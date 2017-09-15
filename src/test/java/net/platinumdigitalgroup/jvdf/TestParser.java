@@ -16,8 +16,41 @@ public class TestParser {
 
     private VDFParser parser = new VDFParser();
 
+
+    // Maven surefire bug can't include resources when forking is disabled
+    private static final String VDF_SAMPLE = "\"root_node\"\n" +
+            "{\n" +
+            "    \"first_sub_node\"\n" +
+            "    {\n" +
+            "        \"first\"     \"value1\"\n" +
+            "        \"second\"    \"value2\"\n" +
+            "    }\n" +
+            "    \"second_sub_node\"\n" +
+            "    {\n" +
+            "        \"third_sub_node\"\n" +
+            "        {\n" +
+            "            \"fourth\"    \"value4\"\n" +
+            "        }\n" +
+            "        \"third\"     \"value3\"\n" +
+            "    }\n" +
+            "}";
+    private static final String VDF_SAMPLE_MULTIMAP = "\"root_node\"\n" +
+            "{\n" +
+            "    \"sub_node\"\n" +
+            "    {\n" +
+            "        \"key\"       \"value1\"\n" +
+            "        \"key\"       \"value2\"\n" +
+            "    }\n" +
+            "    \"sub_node\"\n" +
+            "    {\n" +
+            "        \"key\"       \"value3\"\n" +
+            "        \"key\"       \"value4\"\n" +
+            "    }\n" +
+            "}";
+
     private static final String VDF_SIMPLE_TEST = "key value";
     private static final String VDF_SIMPLE_TEST_RESULT = "value";
+
 
     @Test
     public void testSimple() {
@@ -67,10 +100,9 @@ public class TestParser {
 
     @Test
     public void testSample() throws URISyntaxException, IOException {
-        Path path = Paths.get(ClassLoader.getSystemResource("sample.txt").toURI());
-        VDFNode root = parser.parse(Files.readAllLines(path).toArray(new String[]{}));
+        VDFNode root = parser.parse(VDF_SAMPLE);
 
-        Assert.assertEquals(VDFNode.class, root.get("root_node").getClass());
+        Assert.assertEquals(VDFNode.class, root.getSubNode("root_node").getClass());
         Assert.assertEquals("value1", root
                 .getSubNode("root_node")
                 .getSubNode("first_sub_node")
@@ -88,6 +120,36 @@ public class TestParser {
                 .getSubNode("second_sub_node")
                 .getSubNode("third_sub_node")
                 .getString("fourth"));
+    }
+
+    @Test
+    public void testMultimap() throws URISyntaxException, IOException {
+        VDFNode root = parser.parse(VDF_SAMPLE_MULTIMAP);
+
+        Assert.assertEquals(2, root.getSubNode("root_node").values("sub_node"));
+        Assert.assertEquals("value1", root
+                .getSubNode("root_node")
+                .getSubNode("sub_node", 0)
+                .getString("key"));
+        Assert.assertEquals("value4", root
+                .getSubNode("root_node")
+                .getSubNode("sub_node", 1)
+                .getString("key", 1));
+    }
+
+    @Test
+    public void testReduceMultimap() throws URISyntaxException, IOException {
+        VDFNode root = parser.parse(VDF_SAMPLE_MULTIMAP).reduce();
+
+        Assert.assertEquals("value1", root
+                .getSubNode("root_node")
+                .getSubNode("sub_node")
+                .getString("key", 0));
+
+        Assert.assertEquals("value4", root
+                .getSubNode("root_node")
+                .getSubNode("sub_node")
+                .getString("key", 3));
     }
 
 }

@@ -72,7 +72,6 @@ public class VDFBinder {
 
         try {
             Type t = f.getType();
-            System.out.println(t.getTypeName());
             if(t == String.class) {
                 bindString(obj, f, keyName);
             } else if(t == VDFNode.class) {

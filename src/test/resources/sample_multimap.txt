@@ -1,0 +1,13 @@
+"root_node"
+{
+    "sub_node"
+    {
+        "key"       "value1"
+        "key"       "value2"
+    }
+    "sub_node"
+    {
+        "key"       "value3"
+        "key"       "value4"
+    }
+}
