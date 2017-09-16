@@ -84,6 +84,14 @@ public class TestParser {
         Assert.assertEquals("value", node.getString(""));
     }
 
+    private static final String VDF_SUBSEQUENTKV_TEST = "\"key\"\"value\"";
+
+    @Test
+    public void testSubsequentKeyValue() {
+        VDFNode node = parser.parse(VDF_SUBSEQUENTKV_TEST);
+        Assert.assertEquals("value", node.getString("key"));
+    }
+
 
     private static final String VDF_UNDERFLOW_TEST = "root_node { child_node { key value }";
 

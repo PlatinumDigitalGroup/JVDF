@@ -121,6 +121,9 @@ public class VDFParserState {
 
                 if(currentString.length() == 0)
                     nullString = true;
+
+                // Simulate a space at the end of a quote
+                space();
             }
         }
     }

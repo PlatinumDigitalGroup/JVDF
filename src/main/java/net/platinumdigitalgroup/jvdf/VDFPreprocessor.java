@@ -127,6 +127,10 @@ public class VDFPreprocessor {
                 }
             }
 
+            // Strip conditional statement
+            if(!openQuotes && c == '[')
+                return sb.toString();
+
             // Strip whitespace
             if(isWhitespace(c)) {
 
