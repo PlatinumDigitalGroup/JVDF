@@ -87,27 +87,42 @@ public class VDFPreprocessor {
         char[] charArray = line.toCharArray();
 
         // If the first characters of a line are a comment, we can immediately discard it
-        if(charArray.length >= 2 && isComment(charArray[0], charArray[1])) {
+        if(charArray.length >= 2 && isComment(charArray, 0)) {
             return null;
         }
 
         // Whether a word character has been hit yet in this loop
         boolean hitWord = false;
 
+        // Whether the line currently has unclosed quotes
+        boolean openQuotes = false;
+
         // Iterate character array
         for (int i = 0, charArrayLength = charArray.length; i < charArrayLength; i++) {
             char c = charArray[i];
             char n = 0;
+            char p = 0;
             boolean hasNext = i < charArrayLength - 1;
+            boolean hasPrevious = i > 0;
 
             if(c == '\n' || c == '\r')
                 continue;
+
+            if(hasPrevious)
+                p = charArray[i - 1];
+
+
+            // Toggle open quote flag if we've encountered an unescaped quote
+            if((c == '"' && !hasPrevious) || (hasPrevious && c == '"' && p != '\\'))
+                openQuotes = !openQuotes;
+
 
             // Strip C-style comments
             if(hasNext) {
                 n = charArray[i + 1];
 
-                if (isComment(c, n)) {
+                // If we're not in quotes and this is a comment, immediately return from this line
+                if (!openQuotes && isComment(charArray, i)) {
                     return sb.toString();
                 }
             }
@@ -161,7 +176,10 @@ public class VDFPreprocessor {
      * @param s the second character to test, which must be immediately after f
      * @return if the two characters represent a VDF, C-style comment
      */
-    private boolean isComment(char f, char s) {
+    private boolean isComment(char[] arr, int index) {
+        char f = arr[index];
+        char s = arr[index + 1];
+
         return f == '/' && (s == '*' || s == '/');
     }
 
