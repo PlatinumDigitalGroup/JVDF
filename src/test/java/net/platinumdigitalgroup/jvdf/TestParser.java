@@ -65,12 +65,14 @@ public class TestParser {
         Assert.assertEquals(VDF_QUOTES_TEST_RESULT, parser.parse(VDF_QUOTES_TEST).getString("key with space"));
     }
 
-    private static final String VDF_ESCAPE_TEST = "\"key with \\\"\" \"value with \\\"\"";
-    private static final String VDF_ESCAPE_TEST_RESULT = "value with \"";
+    private static final String VDF_ESCAPE_TEST = "\"key with \\\"\" \"value with \\\" \" \"newline\" \"val\\nue\"";
+    private static final String VDF_ESCAPE_TEST_RESULT = "value with \" ";
 
     @Test
     public void testEscape() {
-        Assert.assertEquals(VDF_ESCAPE_TEST_RESULT, parser.parse(VDF_ESCAPE_TEST).getString("key with \""));
+        VDFNode node = parser.parse(VDF_ESCAPE_TEST);
+        Assert.assertEquals(VDF_ESCAPE_TEST_RESULT, node.getString("key with \""));
+        Assert.assertEquals("val\nue", node.getString("newline"));
     }
 
     private static final String VDF_UNDERFLOW_TEST = "root_node { child_node { key value }";

@@ -164,6 +164,12 @@ public class VDFParserState {
      * @param c a non-control character
      */
     public void character(char c) {
+        // Check specced escape sequence
+        if(escapePending) {
+            if(c == 'n')
+                c = '\n';
+        }
+
         // If the character is not a control character, append it to the current string
         currentString.append(c);
 
