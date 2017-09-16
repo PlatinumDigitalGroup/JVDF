@@ -75,6 +75,16 @@ public class TestParser {
         Assert.assertEquals("val\n\nue", node.getString("newline"));
     }
 
+    private static final String VDF_NULLKV_TEST = "\"key\" \"\" \"spacer\" \"spacer\" \"\" \"value\"";
+
+    @Test
+    public void testNullKeyValue() {
+        VDFNode node = parser.parse(VDF_NULLKV_TEST);
+        Assert.assertEquals("", node.getString("key"));
+        Assert.assertEquals("value", node.getString(""));
+    }
+
+
     private static final String VDF_UNDERFLOW_TEST = "root_node { child_node { key value }";
 
     @Test(expected = VDFParseException.class)

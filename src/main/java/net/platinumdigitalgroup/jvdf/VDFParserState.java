@@ -55,6 +55,11 @@ public class VDFParserState {
     private boolean valuePending = false;
 
     /**
+     * This flag represents if the current string is intentionally a null string
+     */
+    private boolean nullString = false;
+
+    /**
      * When valuePending is true, the key name that the next value corresponds to.
      */
     private String keyName = "";
@@ -113,6 +118,9 @@ public class VDFParserState {
                 resetString();
             } else {
                 // Otherwise, the string has been terminated
+
+                if(currentString.length() == 0)
+                    nullString = true;
             }
         }
     }
@@ -126,7 +134,7 @@ public class VDFParserState {
             character(' ');
         } else {
             // Ignore meaningless spaces
-            if(currentString.length() == 0)
+            if(currentString.length() == 0 && !nullString)
                 return;
 
             valuePending = !valuePending;
@@ -242,6 +250,7 @@ public class VDFParserState {
      */
     private void resetString() {
         currentString.setLength(0);
+        nullString = false;
     }
 
     /**
