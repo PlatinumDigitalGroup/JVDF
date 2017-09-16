@@ -181,7 +181,7 @@ public class VDFParserState {
      * Start a subnode context.
      */
     public void beginSubNode() {
-        if(escapePending) {
+        if(escapePending || quoteState) {
             character('{');
         } else {
             // Create new subnode
@@ -201,7 +201,7 @@ public class VDFParserState {
      * End a subnode context.
      */
     public void endSubNode() {
-        if(escapePending) {
+        if(escapePending || quoteState) {
             character('}');
         } else {
             // At this point, we're done adding key/values, so reset the string buffer and KV state
