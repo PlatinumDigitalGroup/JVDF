@@ -22,7 +22,7 @@ package net.platinumdigitalgroup.jvdf;
  */
 public class VDFParser {
 
-    private VDFPreprocessor preprocessor;
+    private final VDFPreprocessor preprocessor;
 
     /**
      * Initializes the VDFParser with a specific preprocessor
