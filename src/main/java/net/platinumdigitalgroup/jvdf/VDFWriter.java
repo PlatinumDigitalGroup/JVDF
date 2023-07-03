@@ -3,16 +3,24 @@ package net.platinumdigitalgroup.jvdf;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Writes multiple VDF nodes into a human readable String.
+ * @author AreteS0ftware
+ */
 public class VDFWriter {
 
     public VDFWriter() {
     }
 
     public String write(VDFNode root) {
-        return write(root, new StringBuilder(), new StringBuilder());
+        return write(root, false);
     }
 
-    private String write(VDFNode root, StringBuilder whitespace, StringBuilder builder) {
+    public String write(VDFNode root, boolean newLineOnNode) {
+        return write(root, new StringBuilder(), new StringBuilder(), newLineOnNode);
+    }
+
+    private String write(VDFNode root, StringBuilder whitespace, StringBuilder builder, boolean newLineOnNode) {
         Set<Map.Entry<String, Object[]>> entries = root.entrySet();
         for (Map.Entry<String, Object[]> entry : entries) {
             String key = entry.getKey();
@@ -30,12 +38,16 @@ public class VDFWriter {
                 }
                 else {
                     VDFNode node = (VDFNode) obj;
+                    if (newLineOnNode) {
+                        builder.append("\n");
+                        builder.append(whitespace);
+                    }
                     builder.append("{");
                     if (!node.isEmpty()) {
                         builder.append("\n");
                         whitespace.append("    ");
                     }
-                    builder.append(write(node, whitespace, new StringBuilder()));
+                    write(node, whitespace, builder, newLineOnNode);
                     if (!node.isEmpty()) {
                         whitespace.setLength(whitespace.length() - 4);
                         builder.append(whitespace);

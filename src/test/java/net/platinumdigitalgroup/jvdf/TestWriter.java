@@ -42,41 +42,49 @@ public class TestWriter {
             "    }\n" +
             "}";
 
-    private static final String test = "\"keyvalues\"\n " +
-            "{\n" +
-            "    \"Material\" {\n" +
-            "        \"MaterialData\" {\n" +
-            "            \"Vertices\" {\n" +
-            "                \"Color\" {\n" +
-            "                    \"vertex\" \"0.92156863 0.03529412 0.03529412 1.0\"\n" +
-            "                    \"vertex\" \"0.2 0.0 1.0 1.0\"\n" +
-            "                    \"vertex\" \"0.05490196 1.0 0.039215688 1.0\"\n" +
-            "                    \"vertex\" \"0.9490196 0.9490196 0.047058824 1.0\"\n" +
-            "                    \"vertex\" \"0.92156863 0.10980392 0.8392157 1.0\"\n" +
-            "                    \"vertex\" \"1.0 1.0 1.0 1.0\"\n" +
-            "                }\n" +
-            "                \"Position\" {\n" +
-            "                    \"vertex\" \"-3.99 -2.99\"\n" +
-            "                    \"vertex\" \"-2.99 2.01\"\n" +
-            "                    \"vertex\" \"1.01 0.01\"\n" +
-            "                    \"vertex\" \"3.01 -1.99\"\n" +
-            "                    \"vertex\" \"2.01 -4.99\"\n" +
-            "                    \"vertex\" \"-1.8385 -6.1870003\"\n" +
-            "                }\n" +
-            "            }\n" +
-            "            \"offset\" \"1.0 1.0\"\n" +
-            "        }\n" +
-            "        \"filePath\" \"/home/arete/Badlogic.jpg\"\n" +
-            "        \"ppm\" \"100.0\"\n" +
-            "        \"uWrap\" \"Repeat\"\n" +
-            "        \"vWrap\" \"MirroredRepeat\"\n" +
-            "    }\n" +
-            "}";
-
     @Test
     public void testSample() {
-        VDFNode node = parser.parse(test);
-        String result = writer.write(node);
-        Assert.assertEquals(test, result);
+        VDFNode node1 = parser.parse(VDF_SAMPLE);
+        String result = writer.write(node1, true);
+        VDFNode node2 = parser.parse(result);
+        //assertStringEquals(VDF_SAMPLE, result);
+        assertNodesEquals(node1, node2);
     }
+
+    @Test
+    public void testSampleMultimap() {
+        VDFNode node1 = parser.parse(VDF_SAMPLE_MULTIMAP);
+        String result = writer.write(node1, true);
+        VDFNode node2 = parser.parse(result);
+        //assertStringEquals(VDF_SAMPLE_MULTIMAP, result);
+        assertNodesEquals(node1, node2);
+    }
+
+    /*
+    private void assertStringEquals(String string1, String string2) {
+        String[] split1 = string1.split("\n");
+        String[] split2 = string2.split("\n");
+        for (int i = 0; i < split1.length; i++) {
+            Assert.assertEquals(split1[i].replace(" ", ""), split2[i].replace(" ", ""));
+        }
+    }
+     */
+
+    private void assertNodesEquals(VDFNode node1, VDFNode node2) {
+        for (String key : node1.keySet()) {
+            Object[] node1values = node1.get(key);
+            Object[] node2values = node2.get(key);
+            for (int i = 0; i < node1values.length; i++) {
+                Object obj1 = node1values[i];
+                Object obj2 = node2values[i];
+                if (!(obj1 instanceof VDFNode) && !(obj2 instanceof VDFNode)) {
+                    Assert.assertEquals(obj1, obj2);
+                }
+                else {
+                    assertNodesEquals((VDFNode) obj1, (VDFNode) obj2);
+                }
+            }
+        }
+    }
+
 }

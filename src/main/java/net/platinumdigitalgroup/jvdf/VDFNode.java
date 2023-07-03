@@ -64,7 +64,19 @@ public class VDFNode extends TreeMap<String, Object[]> {
      * @return the string value of the specified key, or null if the key does not exist in this node
      */
     public String getString(String key, int index) {
-       return (String)this.get(key)[index];
+        Object[] objects = this.get(key);
+        return objects != null ? (String) objects[index] : null;
+    }
+
+    /**
+     * Fetches an String value by name.
+     * @param key the key name
+     * @param defaultValue the String value to return if the key does not exist in this node
+     * @return the String value of the specified key, or the default value if the key does not exist in this node
+     * */
+    public String getString(String key, String defaultValue) {
+        String value = getString(key, 0);
+        return value != null ? value : defaultValue;
     }
 
     /**
@@ -75,22 +87,45 @@ public class VDFNode extends TreeMap<String, Object[]> {
     public String getString(String key) {
         return getString(key, 0);
     }
+
     /**
      * Fetches an integer value by name.
      * @param key the key name
      * @return the int value of the specified key, or 0 if the key does not exist in this node
      */
     public int getInt(String key) {
-        return Integer.parseInt(getString(key));
+        return getInt(key, 0);
+    }
+
+    /**
+     * Fetches an integer value by name.
+     * @param key the key name
+     * @param defaultValue the int value to return if the key does not exist in this node
+     * @return the int value of the specified key, or the default value if the key does not exist in this node
+     * */
+    public int getInt(String key, int defaultValue) {
+        String value = getString(key);
+        return value != null ? Integer.parseInt(value) : defaultValue;
     }
 
     /**
      * Fetches a float value by name.
      * @param key the key name
-     * @return the float value of the specified key, or 0.f if the key does not exist in this node
+     * @return the float value of the specified key, or 0 if the key does not exist in this node
      */
     public float getFloat(String key) {
-        return Float.parseFloat(getString(key));
+        return getFloat(key, 0);
+    }
+
+    /**
+     * Fetches a float value by name.
+     * @param key the key name
+     * @param defaultValue the float value to return if the key does not exist in this node
+     * @return the float value of the specified key, or the default value if the key does not exist in this node
+     */
+    public float getFloat(String key, float defaultValue) {
+        String value = getString(key);
+        return value != null ? Float.parseFloat(value) : defaultValue;
     }
 
     /**
@@ -99,7 +134,18 @@ public class VDFNode extends TreeMap<String, Object[]> {
      * @return the long value of the specified key, or 0 if the key does not exist in this node
      */
     public long getLong(String key) {
-        return Long.parseLong(getString(key));
+        return getLong(key, 0);
+    }
+
+    /**
+     * Fetches a long value by name.
+     * @param key the key name
+     * @param defaultValue the long value to return if the key does not exist in this node
+     * @return the long value of the specified key, or the default value if the key does not exist in this node
+     */
+    public long getLong(String key, long defaultValue) {
+        String value = getString(key);
+        return value != null ? Long.parseLong(value) : defaultValue;
     }
 
     /**
@@ -127,6 +173,11 @@ public class VDFNode extends TreeMap<String, Object[]> {
      */
     public Color getColor(String key) {
         return Color.getColor(getString(key));
+    }
+
+    public Color getColor(String key, Color defaultValue) {
+        String value = getString(key);
+        return value != null ? Color.getColor(value) : defaultValue;
     }
 
     /**

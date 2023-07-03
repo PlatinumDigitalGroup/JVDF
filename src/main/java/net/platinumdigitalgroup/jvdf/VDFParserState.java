@@ -27,7 +27,7 @@ public class VDFParserState {
     /**
      * The root node is the base of the VDF document.  All subnodes are children of the root node.
      */
-    private VDFNode rootNode;
+    private final VDFNode rootNode;
 
     /**
      * Since a VDF document can have a virtually unlimited amount of subnodes, we use a stack datastructure to represent
@@ -35,7 +35,7 @@ public class VDFParserState {
      * top of the stack.  As we leave subnodes, the stack is popped.  The bottom of the stack should always point to
      * the root node.
      */
-    private Stack<VDFNode> childStack = new Stack<>();
+    private final Stack<VDFNode> childStack = new Stack<>();
 
     /**
      * This flag represents if the parser is currently iterating over a character preceded with an open quote. Since
@@ -67,7 +67,7 @@ public class VDFParserState {
     /**
      * General-use string buffer that represents the last token. This is cleared after every control character.
      */
-    private StringBuilder currentString = new StringBuilder();
+    private final StringBuilder currentString = new StringBuilder();
 
     /**
      * Initializes the parser state with a starting root node.
