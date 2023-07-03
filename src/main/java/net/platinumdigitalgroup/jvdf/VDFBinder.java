@@ -29,7 +29,7 @@ import java.util.Arrays;
  */
 public class VDFBinder {
 
-    private VDFNode rootNode;
+    private final VDFNode rootNode;
 
     /**
      * Initializes the VDF binder with a VDF root node.
@@ -44,7 +44,7 @@ public class VDFBinder {
      * @param obj the POJO to bind the VDF node to
      */
     public void bindTo(Object obj) {
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         Field[] fields = clazz.getDeclaredFields();
 
         Arrays.stream(fields)
@@ -96,7 +96,7 @@ public class VDFBinder {
             throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 
         VDFNode node = rootNode.getSubNode(key);
-        Class type = f.getType();
+        Class<?> type = f.getType();
 
         Object newObj = createType(obj, type);
         new VDFBinder(node).bindTo(newObj);
@@ -104,12 +104,12 @@ public class VDFBinder {
         f.set(obj, newObj);
     }
 
-    private Object createType(Object parent, Class type)
+    private Object createType(Object parent, Class<?> type)
             throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
 
         if(type.isMemberClass()) {
-            Class parentType = type.getDeclaringClass();
-            Constructor ctor = type.getDeclaredConstructor(parentType);
+            Class<?> parentType = type.getDeclaringClass();
+            Constructor<?> ctor = type.getDeclaredConstructor(parentType);
 
             if(ctor != null) {
                 return ctor.newInstance(parent);

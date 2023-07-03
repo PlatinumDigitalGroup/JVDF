@@ -3,6 +3,7 @@ package net.platinumdigitalgroup.jvdf;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -140,6 +141,21 @@ public class TestParser {
                 .getSubNode("second_sub_node")
                 .getSubNode("third_sub_node")
                 .getString("fourth"));
+    }
+
+    @Test
+    public void testDefaultValue() {
+        VDFNode root = parser.parse(VDF_SAMPLE);
+        Assert.assertEquals("not_existing", root
+                .getString("this_key_does_not_exist", "not_existing"));
+        Assert.assertEquals(1, root
+                .getInt("this_key_does_not_exist", 1));
+        Assert.assertEquals(0.123f, root
+                .getFloat("this_key_does_not_exist", 0.123f), 0f);
+        Assert.assertEquals(Long.MAX_VALUE, root
+                .getLong("this_key_does_not_exist", Long.MAX_VALUE), 0f);
+        Assert.assertEquals(Color.CYAN, root
+                .getColor("this_key_does_not_exist", Color.CYAN));
     }
 
     @Test
